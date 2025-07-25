@@ -1,0 +1,124 @@
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #007BFF;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    padding: 20px;
+}
+
+/* Section */
+section {
+    margin-bottom: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Sections cachées */
+#demarrerStage,
+#stageEnCours,
+#arreterStage {
+    display: none;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: #007BFF;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #007BFF;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    position: relative; /* Ajouté pour positionner le bouton */
+}
+
+h1 {
+    margin: 0;
+    display: inline-block; /* Affichage en ligne pour le titre */
+}
+
+.profil-button {
+    position: absolute; /* Positionnement absolu */
+    top: 10px; /* Ajustez selon votre design */
+    right: 20px; /* Ajustez selon votre design */
+    background: white; /* Couleur de fond blanche */
+    color: #007BFF; /* Couleur du texte */
+    border: none;
+    padding: 5px 10px; /* Espacement */
+    border-radius: 5px; /* Coins arrondis */
+    text-decoration: none; /* Pas de soulignement */
+}
+
+.profil-button:hover {
+    background: #e0e0e0; /* Couleur au survol */
+}
+
+
+/* Reste du CSS... */

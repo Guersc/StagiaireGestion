@@ -1,0 +1,113 @@
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background: #007BFF;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+/* Section principale */
+main {
+    padding: 20px;
+}
+
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+}
+
+button {
+    background: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Messages d'état */
+div.status-message {
+    margin-top: 15px;
+    color: red;
+}
+
+div[style*="color: green"] {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+div[style*="color: red"] {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: #007BFF;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Responsivité */
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
+    }
+
+    section {
+        padding: 15px;
+    }
+
+    button {
+        padding: 8px;
+    }
+}

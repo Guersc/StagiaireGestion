@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+}
+
+header {
+    background-color: #0056b3;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    width: 200px;
+    background-color: #0056b3;
+    padding: 20px;
+    height: 100vh; /* Prendre toute la hauteur de la fenêtre */
+    position: fixed; /* Fixer le menu sur la gauche */
+    overflow-y: auto; /* Ajout de défilement si nécessaire */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 15px 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px; /* Espacement interne */
+    display: block; /* Rendre le lien cliquable sur toute la largeur */
+    border-radius: 5px; /* Coins arrondis */
+    transition: background-color 0.3s; /* Transition douce pour le survol */
+}
+
+nav ul li a:hover {
+    background-color: #004494; /* Couleur au survol */
+}
+
+main {
+    margin-left: 220px; /* Pour compenser la largeur du menu */
+    padding: 20px;
+}
+
+.content-section {
+    display: none; /* Cacher par défaut toutes les sections */
+}
+
+h2 {
+    margin-top: 20px;
+    color: #333; /* Couleur du texte */
+}
+
+form {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #004494; /* Couleur au survol */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px; /* Espacement au-dessus des tables */
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+th {
+    background-color: #e9ecef; /* Couleur de fond pour les en-têtes */
+    font-weight: bold; /* Mettre en gras */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; /* Espacement entre les boutons */
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px 0; /* Espacement vertical pour le footer */
+    background-color: #0056b3; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+}
