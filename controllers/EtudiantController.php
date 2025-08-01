@@ -1,7 +1,6 @@
 <?php
-session_start();
+
 require_once '../config.php';
-include '../views/etudiant_form.php';
 
 class EtudiantController {
     private $pdo;
@@ -12,9 +11,6 @@ class EtudiantController {
 
     public function soumettreDemande($data) {
         // Vérification des données reçues
-        var_dump($data); // Debugging, à retirer après test
-
-        // Vérifier si les mots de passe correspondent
         if ($data['mot_de_passe'] !== $data['confirmation_mot_de_passe']) {
             throw new Exception("Les mots de passe ne correspondent pas.");
         }
@@ -25,58 +21,56 @@ class EtudiantController {
         $etudiant_id = $stmt->fetchColumn();
 
         if ($etudiant_id) {
-            // L'étudiant existe déjà, stocker l'ID dans la session
+            $_SESSION['id'] = $etudiant_id; // Stocker l'ID dans la session
+        } else {
+            // Hachage du mot de passe
+            $mot_de_passe_hache = password_hash($data['mot_de_passe'], PASSWORD_BCRYPT);
+
+            // Ajouter l'étudiant dans la base de données
+            $stmt = $this->pdo->prepare("INSERT INTO etudiants (matricule, nom, post_nom, prenom, genre, email, promotion, filiere, telephone, mot_de_passe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            if (!$stmt->execute([
+                $data['matricule'],
+                $data['nom'],
+                $data['post_nom'],
+                $data['prenom'],
+                $data['genre'],
+                $data['email'],
+                $data['promotion'],
+                $data['filiere'],
+                $data['telephone'],
+                $mot_de_passe_hache
+            ])) {
+                throw new Exception("Erreur lors de l'ajout de l'étudiant.");
+            }
+
+            $etudiant_id = $this->pdo->lastInsertId();
             $_SESSION['id'] = $etudiant_id;
-            header('Location: ../views/demandeStage.php'); // Redirection vers la demande de stage
-            exit();
         }
 
-        // Hachage du mot de passe
-        $mot_de_passe_hache = password_hash($data['mot_de_passe'], PASSWORD_BCRYPT);
-
-        // Ajouter l'étudiant dans la base de données
-        $stmt = $this->pdo->prepare("INSERT INTO etudiants (matricule, nom, post_nom, prenom, genre, email, promotion, filiere, telephone, mot_de_passe) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        
-        if (!$stmt->execute([
-            $data['matricule'],
-            $data['nom'],
-            $data['post_nom'],
-            $data['prenom'],
-            $data['genre'],
-            $data['email'],
-            $data['promotion'],
-            $data['filiere'],
-            $data['telephone'],
-            $mot_de_passe_hache
-        ])) {
-            // Afficher les erreurs SQL
-            print_r($stmt->errorInfo());
-            throw new Exception("Erreur lors de l'ajout de l'étudiant.");
+        // Redirection selon le type de formulaire
+        if ($data['form_type'] === 'inscription_offre') {
+            header('Location: ../views/demandeStage.php'); // Inscription à une offre
+        } elseif ($data['form_type'] === 'demande_lettre') {
+            // Ici, vous pourriez gérer l'insertion des informations de l'entreprise, si nécessaire
+            header('Location: ../views/successLettre.php'); // Demande de lettre
         }
-
-        // Récupérer l'ID de l'étudiant après insertion
-        $etudiant_id = $this->pdo->lastInsertId();
-        $_SESSION['id'] = $etudiant_id; // Stocker l'ID dans la session
-
-        // Redirection vers le fichier de demande de stage après ajout
-        header('Location: ../views/demandeStage.php'); // Remplacez par le chemin correct
         exit();
     }
 
     public function traiterFormulaire() {
-        // Vérifiez si le formulaire a été soumis
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] === 'etudiant') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type'])) {
             try {
                 $this->soumettreDemande($_POST);
             } catch (Exception $e) {
-                // Gérer l'erreur (par exemple, afficher un message)
+                // Gérer l'erreur et afficher le formulaire avec un message d'erreur
                 $error_message = $e->getMessage();
-                echo "<div class='error'>$error_message</div>"; // Afficher le message d'erreur
+                include '../views/etudiant_form.php'; // Inclure la vue avec l'erreur
+                return; // Sortir de la méthode
             }
         }
-    }
 
-    public function afficherFormulaire() {
+        // Afficher le formulaire par défaut
         include '../views/etudiant_form.php'; // Inclure la vue
     }
 }

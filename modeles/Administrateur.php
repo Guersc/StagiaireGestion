@@ -15,5 +15,7 @@ class Administrateur {
     }
 
     // Vous pouvez ajouter d'autres méthodes si nécessaire
+    
 }
+
 ?>

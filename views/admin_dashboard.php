@@ -30,7 +30,7 @@
         <ul>
             <li><a href="javascript:void(0);" onclick="showSection('dashboardSection')">dashboard</a></li>
             <li><a href="javascript:void(0);" onclick="showSection('offresSection')">Offres de stage</a></li>
-            <li><a href="javascript:void(0);" onclick="showSection('lettreSection')">demandes de lettres </a></li>
+            <li><a href="javascript:void(0);" onclick="showSection('lettreSection')">demandes de lettres</a></li>
             <li><a href="javascript:void(0);" onclick="showSection('etudiantsSection')">Etudiants</a></li>
             <li><a href="javascript:void(0);" onclick="showSection('statistiquesSection')">Statistiques</a></li>
             <li><a href="javascript:void(0);" onclick="showSection('parametresSection')">Paramètres</a></li>
@@ -44,51 +44,71 @@
             <p>Bienvenue dans le tableau de bord de l'administrateur.</p>
         </section>
 
-       <section id="lettreSection" class="content-section" style="display: none;">
-    <h2>Demandes de Stages</h2>
-    <table>
-        <thead>
+        <!-- Section Demandes de Stages -->
+        <section id="lettreSection" class="content-section" style="display: none;">
+<h2>Demandes de Stages</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Post Nom</th>
+            <th>Prénom</th>
+            <th>Nom de l'Entreprise</th>
+            <th>Lieu de l'Entreprise</th>
+            <th>Adresse de l'Entreprise</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        // Récupérer les demandes de stage
+        $demandes = recupererDemandesStage();
+        
+        if (!empty($demandes)): ?>
+            <?php foreach ($demandes as $demande): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($demande['nom']); ?></td>
+                    <td><?php echo htmlspecialchars($demande['post_nom']); ?></td>
+                    <td><?php echo htmlspecialchars($demande['prenom']); ?></td>
+                    <td><?php echo htmlspecialchars($demande['entreprise_nom']); ?></td>
+                    <td><?php echo htmlspecialchars($demande['entreprise_lieu']); ?></td>
+                    <td><?php echo htmlspecialchars($demande['entreprise_adresse']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
             <tr>
-                <th>ID</th>
-                <th>ID Étudiant</th>
-                <th>Nom de l'Entreprise</th>
-                <th>Lieu</th>
-                <th>Adresse</th>
-                <th>Destinataire</th>
-                <th>Actions</th>
+                <td colspan="6">Aucune demande de stage enregistrée.</td>
             </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (isset($demandes) && !empty($demandes)) {
-                foreach ($demandes as $demande) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($demande['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($demande['Etudiant_id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($demande['entreprise_nom']) . "</td>";
-                    echo "<td>" . htmlspecialchars($demande['entreprise_lieu']) . "</td>";
-                    echo "<td>" . htmlspecialchars($demande['entreprise_adresse']) . "</td>";
-                    echo "<td>" . htmlspecialchars($demande['destinateur']) . "</td>";
-                    echo "<td>
-                            <div class='button-container'>
-                                <form method='POST' action='supprimer_demande_stage.php'>
-                                    <input type='hidden' name='id' value='" . $demande['id'] . "'>
-                                    <button type='submit' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette demande ?\");'>Supprimer</button>
-                                </form>
-                            </div>
-                          </td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7'>Aucune demande de stage enregistrée.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</section>
+        <?php endif; ?>
+    </tbody>
+</table>
+        </section>
 
         <!-- Section Offres -->
         <section id="offresSection" class="content-section" style="display: none;">
+           <h2>Inscriptions aux Offres de Stage</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nom de l'Étudiant</th>
+            <th>Nom de l'Entreprise</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($inscriptions)): ?>
+            <?php foreach ($inscriptions as $inscription): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($inscription['nom_etudiant'] ?? 'Inconnu'); ?></td>
+                    <td><?php echo htmlspecialchars($inscription['entreprise_nom'] ?? 'Non spécifié'); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="2">Aucune inscription trouvée.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
             <h2>Créer une Offre de Stage</h2>
             <form method="POST">
                 <label>Nom de l'Entreprise :</label>
@@ -108,7 +128,7 @@
                 
                 <button type="submit">Créer l'Offre</button>
             </form>
-            <div><?php echo $message; ?></div>
+            <div><?php echo $message ?? ''; ?></div>
 
             <h2>Offres de Stage</h2>
             <table>
@@ -125,7 +145,6 @@
                 <tbody>
                     <?php
                     // Récupérer les offres de stage depuis la base de données
-                    // Assurez-vous d'avoir une connexion à la base de données
                     $query = "SELECT * FROM offres_stage";
                     $stmt = $pdo->prepare($query);
                     $stmt->execute();
@@ -139,16 +158,14 @@
                         echo "<td>" . htmlspecialchars($offre['description']) . "</td>";
                         echo "<td>" . htmlspecialchars($offre['date_limite']) . "</td>";
                         echo "<td>
-                                <div class='button-container'>
-                                    <form method='POST' action='modifier_offre.php'>
-                                        <input type='hidden' name='id' value='" . $offre['id'] . "'>
-                                        <button type='submit' name='edit_offer'>Modifier</button>
-                                    </form>
-                                    <form method='POST' action='supprimer_offre.php'>
-                                        <input type='hidden' name='id' value='" . $offre['id'] . "'>
-                                        <button type='submit' name='delete_offer' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette offre ?\");'>Supprimer</button>
-                                    </form>
-                                </div>
+                                <form method='POST' action='modifier_offre.php'>
+                                    <input type='hidden' name='id' value='" . $offre['id'] . "'>
+                                    <button type='submit' name='edit_offer'>Modifier</button>
+                                </form>
+                                <form method='POST' action='supprimer_offre.php'>
+                                    <input type='hidden' name='id' value='" . $offre['id'] . "'>
+                                    <button type='submit' name='delete_offer' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cette offre ?\");'>Supprimer</button>
+                                </form>
                               </td>";
                         echo "</tr>";
                     }
@@ -221,45 +238,6 @@
                 <?php endforeach; ?>
             </table>
 
-             <h2>Ajouter un Nouvel Étudiant</h2>
-            <form action="admin_dashboard.php" method="POST">
-                <label for="new_nom">Nom :</label>
-                <input type="text" id="new_nom" name="new_nom" required>
-                
-                <label for="new_post_nom">Post Nom :</label>
-                <input type="text" id="new_post_nom" name="new_post_nom" required>
-
-                <label for="new_prenom">Prénom :</label>
-                <input type="text" id="new_prenom" name="new_prenom" required>
-
-                <label for="new_genre">Genre :</label>
-                <select id="new_genre" name="new_genre" required>
-                    <option value="Masculin">Masculin</option>
-                    <option value="Féminin">Féminin</option>
-                </select>
-                
-                <label for="new_email">Email :</label>
-                <input type="email" id="new_email" name="new_email" required>
-                
-                <label for="new_mot_de_passe">Mot de passe :</label>
-                <input type="password" id="new_mot_de_passe" name="new_mot_de_passe" required>
-                
-                <label for="new_promotion">Promotion :</label>
-                <input type="text" id="new_promotion" name="new_promotion" required>
-
-                <label for="new_filiere">Filière :</label>
-                <input type="text" id="new_filiere" name="new_filiere" required>
-
-                <label for="new_telephone">Téléphone :</label>
-                <input type="text" id="new_telephone" name="new_telephone" required>
-                
-                <button type="submit" name="add_student">Ajouter</button>
-            </form>
-            <div style="color: red;"><?php echo $message ?? ''; ?></div>
-        </section>
-
-        <!-- Section Ajouter un Nouvel Étudiant -->
-        <section id="ajouterEtudiantSection" class="content-section" style="display: none;">
             <h2>Ajouter un Nouvel Étudiant</h2>
             <form action="admin_dashboard.php" method="POST">
                 <label for="new_nom">Nom :</label>
@@ -296,6 +274,23 @@
             </form>
             <div style="color: red;"><?php echo $message ?? ''; ?></div>
         </section>
+
+
+        <!-- Section Statistiques -->
+<section id="statistiquesSection" class="content-section" style="display: none;">
+    <h2>Statistiques</h2>
+    <div class="statistiques">
+        <ul>
+            <li><strong>Nombre d'Étudiants Inscrits :</strong> <?php echo compterEtudiants(); ?></li>
+            <li><strong>Nombre de Demandes de Lettres :</strong> <?php echo compterDemandesLetters(); ?></li>
+            <li><strong>Inscriptions aux Différentes Offres :</strong> <?php echo compterInscriptionsOffres(); ?></li>
+            <li><strong>Stages en Cours :</strong> <?php echo compterStagesEnCours(); ?></li>
+            <li><strong>Stages Terminés :</strong> <?php echo compterStagesTermines(); ?></li>
+            <li><strong>Rapports Déposés :</strong> <?php echo compterRapportsDeposes(); ?></li>
+        </ul>
+    </div>
+</section>
+        
     </main>
 
     <footer>

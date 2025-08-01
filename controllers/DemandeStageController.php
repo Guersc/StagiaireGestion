@@ -1,4 +1,8 @@
 <?php
+session_start(); // Assurez-vous de démarrer la session
+require_once '../config.php'; // Assurez-vous que le chemin est correct
+require_once '../controllers/EtudiantController.php'; // Inclure le contrôleur de l'étudiant
+
 class DemandeStageController {
     private $pdo;
 
@@ -13,22 +17,35 @@ class DemandeStageController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Ajouter une demande de stage
     public function ajouterDemande($entreprise_nom, $entreprise_lieu, $entreprise_adresse, $destinateur, $confirmation_notice) {
-    // Vérifier si l'ID de l'étudiant est défini dans la session
-    if (!isset($_SESSION['id'])) {
-        throw new Exception("L'ID de l'étudiant n'est pas défini dans la session.");
+        // Vérifier si l'ID de l'étudiant est défini dans la session
+        if (!isset($_SESSION['id'])) {
+            throw new Exception("L'ID de l'étudiant n'est pas défini dans la session.");
+        }
+
+        $etudiant_id = $_SESSION['id']; // Récupérer l'ID de l'étudiant à partir de la session
+
+        // Ajouter la demande de stage
+        $stmt = $this->pdo->prepare("INSERT INTO demandes_stage (etudiant_id, entreprise_nom, entreprise_lieu, entreprise_adresse, destinateur, confirmation_notice) VALUES (?, ?, ?, ?, ?, ?)");
+        if (!$stmt->execute([$etudiant_id, $entreprise_nom, $entreprise_lieu, $entreprise_adresse, $destinateur, $confirmation_notice])) {
+            print_r($stmt->errorInfo());
+            return false;
+        }
+
+        return true;
     }
 
-    $etudiant_id = $_SESSION['id']; // Récupérer l'ID de l'étudiant à partir de la session
-
-    // Ajouter la demande de stage
-    $stmt = $this->pdo->prepare("INSERT INTO demandes_stage (etudiant_id, entreprise_nom, entreprise_lieu, entreprise_adresse, destinateur, confirmation_notice) VALUES (?, ?, ?, ?, ?, ?)");
-    if (!$stmt->execute([$etudiant_id, $entreprise_nom, $entreprise_lieu, $entreprise_adresse, $destinateur, $confirmation_notice])) {
-        print_r($stmt->errorInfo());
-        return false;
+    // Rediriger vers le contrôleur de l'étudiant pour récupérer les informations
+    public function redirigerVersEtudiant() {
+        $etudiantController = new EtudiantController($this->pdo);
+     // Appeler la méthode pour afficher le formulaire de l'étudiant
     }
+}
 
-    return true;
-}
-}
+// Exemple d'utilisation
+$controller = new DemandeStageController($pdo);
+
+// Vous pouvez appeler la méthode de redirection ici
+$controller->redirigerVersEtudiant();
 ?>

@@ -1,25 +1,3 @@
-<?php
-require_once '../config.php'; // Assurez-vous que le chemin est correct
-require_once "../controllers/EtudiantController.php";
-
-// Instanciation du contrôleur
-$controller = new EtudiantController($pdo);
-
-// Vérifier si le formulaire a été soumis
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] === 'etudiant') {
-    try {
-        // Appel à la méthode pour traiter l'insertion
-        $controller->soumettreDemande($_POST);
-        // Rediriger ou afficher un message de succès
-        header('Location: success.php'); // Remplacez par votre page de succès
-        exit;
-    } catch (Exception $e) {
-        // Gérer l'erreur (par exemple, afficher un message)
-        $error_message = $e->getMessage();
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,12 +5,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POS
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demande de Stage</title>
     <link rel="stylesheet" href="../assets/css/styleEtudiant.css"> <!-- Lien vers le fichier CSS -->
+    <script>
+        function toggleFields() {
+            const formType = document.querySelector('input[name="form_type"]:checked').value;
+            const entrepriseFields = document.getElementById('entreprise-fields');
+            entrepriseFields.style.display = (formType === 'demande_lettre') ? 'block' : 'none';
+        }
+    </script>
 </head>
 <body>
     <h2>Informations de l'Étudiant</h2>
-    <!-- Ajout d'un champ caché pour le type de formulaire -->
     <form id="form-etudiant" method="POST" action="">
-        <input type="hidden" name="form_type" value="etudiant">
+        <div>
+            <label>
+                <input type="radio" name="form_type" value="inscription_offre" checked onclick="toggleFields()"> Inscription à une Offre de Stage
+            </label>
+            <label>
+                <input type="radio" name="form_type" value="demande_lettre" onclick="toggleFields()"> Demande de Lettre de Stage
+            </label>
+        </div>
         
         <label for="matricule">Matricule :</label>
         <input type="text" id="matricule" name="matricule" required>
@@ -80,11 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POS
             <option value="autre">Autre</option>
         </select>
 
-        <div id="other-field" style="display: none;">
-            <label for="autre_filiere">Veuillez préciser :</label>
-            <input type="text" id="autre_filiere" name="autre_filiere">
-        </div>
-
         <label for="telephone">Téléphone :</label>
         <input type="text" id="telephone" name="telephone" required>
 
@@ -94,7 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POS
         <label for="confirmation_mot_de_passe">Confirmer le Mot de Passe :</label>
         <input type="password" id="confirmation_mot_de_passe" name="confirmation_mot_de_passe" required>
 
-        <button type="submit">Suivant</button>
+       
+
+        <button type="submit">Soumettre</button>
     </form>
 
     <?php if (isset($error_message)): ?>

@@ -12,11 +12,11 @@ session_start();
 </head>
 <body>
     <header>
-        <h1>Bienvenue dans le Système de Gestion des Stagiaires</h1>
+        <h1>Bienvenue sur STAGEnet </h1>
         <nav>
             <ul>
                 <li><a href="controllers/login.php">Mon Stage</a></li>
-                <li><a href="controllers/EtudiantController.php">Lettre de Stage</a></li>
+                <li><a href="controllers/DemandeStageController.php">Lettre de Stage</a></li>
                 <li><a href="entreprises_collaborateurs.php">Entreprises Collaboratrices</a></li>
                 <li><a href="../controllers/OffreController.php">Offres de Stages</a></li>
                 <li><a href="en_savoir_plus.php">En Savoir Plus</a></li>
@@ -28,7 +28,7 @@ session_start();
 
     <main>
         <section class="card">
-            <h2><a href="views/login.php">Mon Stage</a></h2>
+            <h2><a href="controllers/DemandeStageController.php">Mon Stage</a></h2>
             <p>Visualisez et gérez les détails de votre stage.</p>
         </section>
 

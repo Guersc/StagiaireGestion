@@ -18,13 +18,16 @@ $offres = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Gestion de l'inscription à une offre
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['apply'])) {
-    $etudiant_id = $_SESSION['id']; // Assurez-vous que l'ID de l'étudiant est stocké dans la session
-    $offre_id = $_POST['offre_id'];
+    $etudiant_id = $_SESSION['id']; // Récupérer l'ID de l'étudiant depuis la session
+    $offre_id = $_POST['offre_id']; // Récupérer l'ID de l'offre depuis le formulaire
 
     // Insérer l'inscription dans la table d'inscriptions
     $stmt = $pdo->prepare("INSERT INTO inscriptions (etudiant_id, offre_id) VALUES (:etudiant_id, :offre_id)");
     if ($stmt->execute([':etudiant_id' => $etudiant_id, ':offre_id' => $offre_id])) {
-        $message = "Inscription réussie à l'offre de stage.";
+        // Stocker l'ID de l'offre dans la session
+        $_SESSION['offre_id'] = $offre_id;
+        header("Location: EtudiantController.php");
+        exit();
     } else {
         $message = "Erreur lors de l'inscription à l'offre.";
     }

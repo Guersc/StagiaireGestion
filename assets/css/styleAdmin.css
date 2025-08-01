@@ -3,6 +3,8 @@ body {
     background-color: #f4f4f4;
     margin: 0;
     display: flex;
+    flex-direction: column; /* Organiser en colonne */
+    height: 100vh; /* Prendre toute la hauteur de la fenêtre */
 }
 
 header {
@@ -16,7 +18,7 @@ nav {
     width: 200px;
     background-color: #0056b3;
     padding: 20px;
-    height: 100vh; /* Prendre toute la hauteur de la fenêtre */
+    height: calc(100vh - 80px); /* Ajuster la hauteur pour le header */
     position: fixed; /* Fixer le menu sur la gauche */
     overflow-y: auto; /* Ajout de défilement si nécessaire */
 }
@@ -46,6 +48,8 @@ nav ul li a:hover {
 main {
     margin-left: 220px; /* Pour compenser la largeur du menu */
     padding: 20px;
+    flex: 1; /* Prendre l'espace restant */
+    overflow-y: auto; /* Ajout de défilement si nécessaire */
 }
 
 .content-section {
